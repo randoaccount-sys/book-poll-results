@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>October 2025 Book Club Poll Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        #chartContainer {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .stat-item {
+            padding: 10px;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #666;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 October 2025 Social Story Poll Results</h1>
+        
+        <div id="chartContainer">
+            <canvas id="pollChart"></canvas>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="bearCount">0</div>
+                <div class="stat-label">Bear & Nightingale</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="bonesCount">0</div>
+                <div class="stat-label">Bag of Bones</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="maidenCount">0</div>
+                <div class="stat-label">The Maiden</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="ghostsCount">0</div>
+                <div class="stat-label">Britain's Ghosts</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the chart
+        const ctx = document.getElementById('pollChart').getContext('2d');
+        let pollChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['The Bear and the Nightingale', 'Bag of Bones', 'The Maiden', 'Britain\'s Ghosts'],
+                datasets: [{
+                    data: [0, 0, 0, 0],
+                    backgroundColor: [
+                        '#FF6B6B',  // Red for Bear & Nightingale
+                        '#4ECDC4',  // Teal for Bag of Bones  
+                        '#45B7D1',  // Blue for The Maiden
+                        '#96CEB4'   // Green for Britain's Ghosts
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Function to update chart with new data
+        function updateChart(data) {
+            const totals = data.poll_totals;
+            const newData = [
+                parseInt(totals.bear_nightingale) || 0,
+                parseInt(totals.bag_of_bones) || 0,
+                parseInt(totals.the_maiden) || 0,
+                parseInt(totals.britains_ghosts) || 0
+            ];
+            
+            pollChart.data.datasets[0].data = newData;
+            pollChart.update();
+            
+            // Update stat counters
+            document.getElementById('bearCount').textContent = newData[0];
+            document.getElementById('bonesCount').textContent = newData[1];
+            document.getElementById('maidenCount').textContent = newData[2];
+            document.getElementById('ghostsCount').textContent = newData[3];
+        }
+
+        // Simulate real-time updates (replace with actual webhook endpoint)
+        // This will be replaced by your webhook receiver
+        function connectWebSocket() {
+            // For now, load initial data
+            updateChart({
+                poll_totals: {
+                    bear_nightingale: 0,
+                    bag_of_bones: 0,
+                    the_maiden: 0,
+                    britains_ghosts: 0
+                }
+            });
+        }
+
+        // Initialize
+        connectWebSocket();
+    </script>
+</body>
+</html>
